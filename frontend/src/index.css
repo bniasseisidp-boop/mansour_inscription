@@ -178,6 +178,8 @@ h1 {
 
 .app-header-brand {
   font-weight: 700;
+  color: var(--color-text);
+  text-decoration: none;
 }
 
 .app-header-user {
@@ -216,4 +218,177 @@ h1 {
   width: 100%;
   margin: 0 auto;
   padding: 2rem 1.5rem;
+}
+
+/* --- Vitrine publique --- */
+
+.home-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100svh;
+}
+
+.home-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 2rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.home-nav-brand {
+  font-weight: 700;
+}
+
+.home-nav-links {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.home-nav-links a {
+  color: var(--color-text);
+  text-decoration: none;
+  font-size: 0.95rem;
+}
+
+.home-nav-links a:hover {
+  color: var(--color-primary);
+}
+
+.home-nav-cta {
+  background: var(--color-primary);
+  color: white !important;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-weight: 600;
+}
+
+.home-nav-cta:hover {
+  background: var(--color-primary-hover);
+  color: white !important;
+}
+
+.home-hero {
+  text-align: center;
+  padding: 5rem 1.5rem 4rem;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.home-hero h1 {
+  font-size: 2.5rem;
+  line-height: 1.15;
+  margin: 0 0 1.25rem;
+}
+
+.home-hero p {
+  color: var(--color-text-muted);
+  font-size: 1.1rem;
+  margin: 0 0 2rem;
+}
+
+.home-hero-actions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.home-btn {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
+  text-decoration: none;
+  font-size: 0.95rem;
+}
+
+.home-btn-primary {
+  background: var(--color-primary);
+  color: white;
+}
+
+.home-btn-primary:hover {
+  background: var(--color-primary-hover);
+}
+
+.home-btn-secondary {
+  background: transparent;
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+}
+
+.home-btn-secondary:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.home-steps {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+  max-width: 960px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 1.5rem 4rem;
+}
+
+.home-step-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+
+.home-step-card h3 {
+  margin: 0 0 0.5rem;
+  font-size: 1.05rem;
+}
+
+.home-step-card p {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+}
+
+.home-features {
+  background: var(--color-surface);
+  border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+  padding: 4rem 1.5rem;
+  text-align: center;
+}
+
+.home-features h2 {
+  margin: 0 0 2.5rem;
+  font-size: 1.5rem;
+}
+
+.home-features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 2rem;
+  max-width: 960px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+.home-feature-card h3 {
+  font-size: 1rem;
+  margin: 0 0 0.5rem;
+}
+
+.home-feature-card p {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+}
+
+.home-footer {
+  margin-top: auto;
+  text-align: center;
+  padding: 2rem 1.5rem;
+  color: var(--color-text-muted);
+  font-size: 0.85rem;
 }

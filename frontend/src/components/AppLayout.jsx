@@ -1,5 +1,6 @@
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../auth/AuthContext'
+import { defaultRouteForRole } from '../auth/roles'
 
 const ROLE_LABELS = {
   etudiant: 'Étudiant',
@@ -19,7 +20,9 @@ export default function AppLayout({ title, children }) {
   return (
     <div className="app-shell">
       <header className="app-header">
-        <span className="app-header-brand">Gestion Inscriptions</span>
+        <Link to={defaultRouteForRole(user?.role)} className="app-header-brand">
+          Gestion Inscriptions
+        </Link>
         <div className="app-header-user">
           <span className="app-header-name">{user?.name}</span>
           <span className="app-header-role">{ROLE_LABELS[user?.role] ?? user?.role}</span>
