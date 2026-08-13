@@ -4,6 +4,8 @@ import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
 import StudentDashboardPage from './pages/StudentDashboardPage'
 import AdminDashboardPage from './pages/AdminDashboardPage'
+import AdminFilieresPage from './pages/AdminFilieresPage'
+import AdminAnneesAcademiquesPage from './pages/AdminAnneesAcademiquesPage'
 import RequireAuth from './auth/RequireAuth'
 
 export default function App() {
@@ -27,6 +29,24 @@ export default function App() {
         element={
           <RequireAuth roles={['admin', 'super_admin']}>
             <AdminDashboardPage />
+          </RequireAuth>
+        }
+      />
+
+      <Route
+        path="/admin/filieres"
+        element={
+          <RequireAuth roles={['admin', 'super_admin']}>
+            <AdminFilieresPage />
+          </RequireAuth>
+        }
+      />
+
+      <Route
+        path="/admin/annees-academiques"
+        element={
+          <RequireAuth roles={['admin', 'super_admin']}>
+            <AdminAnneesAcademiquesPage />
           </RequireAuth>
         }
       />
