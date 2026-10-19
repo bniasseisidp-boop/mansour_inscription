@@ -1,55 +1,73 @@
-import { Route, Routes } from 'react-router-dom'
-import HomePage from './pages/HomePage'
-import LoginPage from './pages/LoginPage'
-import RegisterPage from './pages/RegisterPage'
-import StudentDashboardPage from './pages/StudentDashboardPage'
-import AdminDashboardPage from './pages/AdminDashboardPage'
-import AdminFilieresPage from './pages/AdminFilieresPage'
-import AdminAnneesAcademiquesPage from './pages/AdminAnneesAcademiquesPage'
-import RequireAuth from './auth/RequireAuth'
+﻿import { Routes, Route, Navigate } from 'react-router-dom'
+import { useAuth } from './contexts/AuthContext'
+import Landing from './pages/Landing'
+import Formations from './pages/Formations'
+import PreInscription from './pages/PreInscription'
+import Login from './pages/Login'
+import ResetPassword from './pages/ResetPassword'
+import StudentPortal from './pages/StudentPortal'
+import AdminDashboard from './pages/AdminDashboard'
+import CashierDashboard from './pages/CashierDashboard'
+import AccueilDashboard from './pages/AccueilDashboard'
+import AccueilPedagogiqueDashboard from './pages/AccueilPedagogiqueDashboard'
+import ProfesseurDashboard from './pages/ProfesseurDashboard'
+
+function ProtectedRoute({ children, roles }) {
+  const { user, loading } = useAuth()
+  if (loading) return <div className="min-h-screen flex items-center justify-center bg-space-900"><div className="spinner" /></div>
+  if (!user) return <Navigate to="/connexion" replace />
+  // Le super admin a accès à tout, quel que soit le rôle attendu par la route
+  // (miroir de CheckRole côté backend).
+  if (user.role !== 'super_admin' && roles && !roles.includes(user.role)) return <Navigate to="/" replace />
+  return children
+}
 
 export default function App() {
   return (
     <Routes>
-      <Route path="/" element={<HomePage />} />
-      <Route path="/connexion" element={<LoginPage />} />
-      <Route path="/inscription" element={<RegisterPage />} />
+      <Route path="/"              element={<Landing />} />
+      <Route path="/formations"    element={<Formations />} />
+      <Route path="/pre-inscription" element={<PreInscription />} />
+      <Route path="/connexion"     element={<Login />} />
+      <Route path="/reinitialiser-mot-de-passe" element={<ResetPassword />} />
 
-      <Route
-        path="/espace-etudiant"
-        element={
-          <RequireAuth roles={['etudiant']}>
-            <StudentDashboardPage />
-          </RequireAuth>
-        }
-      />
+      <Route path="/student/*" element={
+        <ProtectedRoute roles={['student']}>
+          <StudentPortal />
+        </ProtectedRoute>
+      } />
 
-      <Route
-        path="/admin"
-        element={
-          <RequireAuth roles={['admin', 'super_admin']}>
-            <AdminDashboardPage />
-          </RequireAuth>
-        }
-      />
+      <Route path="/admin/*" element={
+        <ProtectedRoute roles={['admin']}>
+          <AdminDashboard />
+        </ProtectedRoute>
+      } />
 
-      <Route
-        path="/admin/filieres"
-        element={
-          <RequireAuth roles={['admin', 'super_admin']}>
-            <AdminFilieresPage />
-          </RequireAuth>
-        }
-      />
+      <Route path="/caisse/*" element={
+        <ProtectedRoute roles={['cashier', 'admin']}>
+          <CashierDashboard />
+        </ProtectedRoute>
+      } />
 
-      <Route
-        path="/admin/annees-academiques"
-        element={
-          <RequireAuth roles={['admin', 'super_admin']}>
-            <AdminAnneesAcademiquesPage />
-          </RequireAuth>
-        }
-      />
+      <Route path="/accueil/*" element={
+        <ProtectedRoute roles={['accueil', 'admin']}>
+          <AccueilDashboard />
+        </ProtectedRoute>
+      } />
+
+      <Route path="/pedagogique/*" element={
+        <ProtectedRoute roles={['pedagogique', 'admin']}>
+          <AccueilPedagogiqueDashboard />
+        </ProtectedRoute>
+      } />
+
+      <Route path="/professeur/*" element={
+        <ProtectedRoute roles={['professeur']}>
+          <ProfesseurDashboard />
+        </ProtectedRoute>
+      } />
+
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   )
 }

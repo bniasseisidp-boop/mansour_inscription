@@ -2,58 +2,56 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Database\Factories\UserFactory;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable, HasApiTokens;
+    use HasApiTokens, Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
-    protected $fillable = [
-        'name',
-        'email',
-        'password',
-        'role',
-        'matricule',
-        'telephone',
-        'statut',
+    protected $fillable = ['name', 'email', 'password', 'role', 'actif'];
+
+    protected $hidden = ['password', 'remember_token', 'two_factor_code'];
+
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'password' => 'hashed',
+        'actif' => 'boolean',
+        'two_factor_code_expires_at' => 'datetime',
+        'two_factor_confirmed_at' => 'datetime',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
+    protected $appends = ['photo_url'];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
-    protected function casts(): array
+    public function getPhotoUrlAttribute(): ?string
     {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
+        return $this->photo ? '/storage/' . $this->photo : null;
     }
 
-    public function hasRole(string ...$roles): bool
+    public function student()
     {
-        return in_array($this->role, $roles, true);
+        return $this->hasOne(Student::class);
+    }
+
+    public function isAdmin(): bool    { return $this->role === 'admin'; }
+    public function isCashier(): bool  { return $this->role === 'cashier'; }
+    public function isStudent(): bool  { return $this->role === 'student'; }
+    public function isAccueil(): bool  { return $this->role === 'accueil'; }
+
+    /**
+     * Le lien de réinitialisation doit pointer vers le frontend React (SPA),
+     * pas vers une route web Laravel — cette API n'en sert aucune.
+     */
+    public function sendPasswordResetNotification($token): void
+    {
+        $url = rtrim(config('app.frontend_url'), '/')
+            . '/reinitialiser-mot-de-passe?token=' . $token . '&email=' . urlencode($this->email);
+
+        try {
+            \Illuminate\Support\Facades\Mail::to($this->email)->send(new \App\Mail\ResetPasswordMail($url));
+        } catch (\Exception $e) {
+            \Log::warning('Email réinitialisation mot de passe: ' . $e->getMessage());
+        }
     }
 }
